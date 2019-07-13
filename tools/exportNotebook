@@ -33,7 +33,7 @@ shift
 
 # Start SSH in ControlMaster mode
 ssh_cmd="ssh -o ControlPersist=10s"
-scp_cmd=scp
+scp_cmd="scp -T"
 rm_tmpfolders="rm -Rf \"${tmpfolder}\""
 
 grep ControlPath ~/.ssh/config >/dev/null
@@ -47,7 +47,7 @@ fi
 ${ssh_cmd} ${SSH_IP} exit
 
 # Getting the notebook prefix (Newest notebook matching the name)
-id=$(${ssh_cmd} -M ${SSH_IP} "ls -rt .local/share/remarkable/xochitl/*.metadata | xargs fgrep -l $1" | tail -n1 | cut -d. -f1,2)
+id=$(${ssh_cmd} ${SSH_IP} "ls -rt .local/share/remarkable/xochitl/*.metadata | xargs fgrep -il $1" | tail -n1 | cut -d. -f1,2)
 
 test -z "$id" && exit 1
 

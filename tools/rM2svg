@@ -88,14 +88,14 @@ def lines2svg(input_file, output_name, singlefile, coloured_annotations=False):
         output_name = output_name[:-4]
 
     # Is this a reMarkable .lines file?
-    expected_header=b'reMarkable lines with selections and layers'
-    if len(data) < len(expected_header) + 4:
+    expected_header=b'reMarkable .lines file, version=3          '
+    if len(data) < len(expected_header):
         abort('File too short to be a valid file')
 
     fmt = '<{}sI'.format(len(expected_header))
-    header, npages = struct.unpack_from(fmt, data, offset); offset += struct.calcsize(fmt)
-    if header != expected_header or npages < 1:
-        abort('Not a valid reMarkable file: <header={}><npages={}>'.format(header, npages))
+    header = struct.unpack_from(fmt, data, offset); offset += struct.calcsize(fmt)
+    if header != expected_header:
+        abort('Not a valid reMarkable file: <header={}>'.format(header))
 
     if singlefile:
         output = open(output_name, 'w')
